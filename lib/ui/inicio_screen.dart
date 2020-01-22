@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../service/HttpService.dart';
 import 'cadastrar/cadastrar_screen.dart';
@@ -15,6 +16,12 @@ class _InicioScreenState extends State<InicioScreen> {
   final HttpService httpService = HttpService();
   int tamPessoas = 0;
 
+  tamanho(int tamanho){
+    setState(() {
+      tamPessoas = tamanho;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -25,22 +32,37 @@ class _InicioScreenState extends State<InicioScreen> {
       appBar: AppBar(
         title: Text("API RESTfull"),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.refresh), onPressed: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) => InicioScreen(),))),
+        ],
       ),
       body: FutureBuilder(
         future: httpService.getPessoas(),
         builder: (BuildContext context, AsyncSnapshot<List<Pessoa>> snapshot) {
-          if (snapshot.hasData) {
-/*            setState(() {
-              tamPessoas = snapshot.data.length;
-            });*/
+          if(snapshot.data.isEmpty){
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(FontAwesomeIcons.database, color: Colors.red, size: 30.0,),
+                  SizedBox(height: 15.0,),
+                  Center( child: Text("Sem dados. :("),),
+                ],
+              ),
+            );
+          } else if (snapshot.hasData) {
+
             List<Pessoa> pessoas = snapshot.data;
+
+             // tamanho(pessoas.length);
             return ListView(
               children: pessoas
                   .map(
-                    (Pessoa pessoa) => ListTile(
+                    (Pessoa pessoa) =>
+                    ListTile(
                       leading: CircleAvatar(child: Text("${pessoa.id}")),
-                      title:
-                          Text(pessoa.primeiroNome + " " + pessoa.ultimoNome),
+                      title: Text(pessoa.primeiroNome + " " + pessoa.ultimoNome),
                       subtitle: Text(pessoa.emailId),
                       selected: true,
                       trailing: IconButton(
@@ -58,7 +80,8 @@ class _InicioScreenState extends State<InicioScreen> {
                                       child: Text("Sim"),
                                       onPressed: () async {
                                         await httpService.deletePost(pessoa.id);
-                                        Navigator.of(context).pop();
+                                        httpService.getPessoas();
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => InicioScreen(),));
                                       },
                                     ),
                                     FlatButton(
@@ -72,15 +95,17 @@ class _InicioScreenState extends State<InicioScreen> {
                               });
                         },
                       ),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => DetalheScreen(
-                            pessoa: pessoa,
+                      onTap: () =>
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DetalheScreen(
+                                    pessoa: pessoa,
+                                  ),
+                            ),
                           ),
-                        ),
-                      ),
                     ),
-                  )
+              )
                   .toList(),
             );
           } else {
@@ -92,11 +117,13 @@ class _InicioScreenState extends State<InicioScreen> {
         alignment: Alignment.topLeft,
         children: <Widget>[
           new FloatingActionButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => CadastrarScreen(),
-              ),
-            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CadastrarScreen(),
+                ),
+              );
+            },
             child: new Icon(Icons.add),
           ),
           new CircleAvatar(

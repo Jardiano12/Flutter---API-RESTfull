@@ -5,7 +5,7 @@ class Pessoa {
   final String primeiroNome;
   final String ultimoNome;
   final String emailId;
-  final bool ativo;
+  final String ativo;
 
   Pessoa({
     @required this.id,
@@ -19,7 +19,7 @@ class Pessoa {
     return Pessoa(
       primeiroNome: json['primeiroNome'] as String,
       ultimoNome: json['ultimoNome'] as String,
-      ativo: json['ativo']as bool,
+      ativo: json['ativo'] as String,
       emailId: json['emailId'] as String,
       id: json['id'] as int,
     );

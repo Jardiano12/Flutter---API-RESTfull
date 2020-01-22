@@ -6,6 +6,7 @@ import 'package:flutter_apirest/ui/inicio_screen.dart';
 import 'package:flutter_apirest/widgets/snackbar_widget.dart';
 import 'package:flutter_apirest/widgets/textfild_widget.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:http/http.dart' as http;
 
 class CadastrarScreen extends StatefulWidget {
   @override
@@ -20,8 +21,9 @@ class _CadastrarScreenState extends State<CadastrarScreen> {
   var primeiroNomeControlle = TextEditingController();
   var ultimoNomeControlle = TextEditingController();
   var emailIdControlle = TextEditingController();
-  String ativoControlle = '';
+  bool mAtivo;
   final HttpService httpService = HttpService();
+  String auxAtivo;
 
   @override
   void dispose() {
@@ -81,7 +83,7 @@ class _CadastrarScreenState extends State<CadastrarScreen> {
                           controller: emailIdControlle,
                           sidePadding: 8.0,
                           textHint: 'E-mail',
-                          textIcon: Icons.person_pin,
+                          textIcon: Icons.mail,
                           textType: TextInputType.text,
                           onBtnclickedValidate: (validar) {
                             if (validar.isEmpty) {
@@ -97,9 +99,13 @@ class _CadastrarScreenState extends State<CadastrarScreen> {
                             "Ativo",
                             "Inativo",
                           ],
-                          onSelected: (String selected) {
+                          onSelected: (auxAtivo) {
                             setState(() {
-                              ativoControlle == selected;
+                              if(auxAtivo == "Ativo") {
+                                mAtivo = true;
+                              } else {
+                                mAtivo = true;
+                              }
                             });
                           }
                       )
@@ -115,17 +121,32 @@ class _CadastrarScreenState extends State<CadastrarScreen> {
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.all(
                             new Radius.circular(15.0))),
-                    onPressed: () {
+                    onPressed: () async {
                       if(_formKey.currentState.validate()){
 
-                      } if (ativoControlle == '') {
+                      } /*if (auxAtivo == null) {
                         showSnackBar("Status não pode ser vazio!", Colors.red, scaffoldKey);
-                      } else {
-                        httpService.postPessoas(
+                      } */else {
+                    /*    httpService.postPessoas(
                             primeiroNome: primeiroNomeControlle.text,
                             ultimoNome: ultimoNomeControlle.text,
                             emailId: emailIdControlle.text,
-                            ativo: ativoControlle);
+                            ativo: 'mAtivo');
+*/
+                        var client = http.Client();
+                        try {
+                          var uriResponse = await client.post("http://192.168.0.108:8080/crud/api/v1/funcionario",
+                              body: {
+                                "id": 6,
+                                "primeiroNome": "jardiano",
+                                "ultimoNome": "Almeida",
+                                "emailId": "Jardiano@gmail.com",
+                                "ativo": "false"
+                              });
+                      } finally {
+                      client.close();
+                      }
+
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => InicioScreen(),
