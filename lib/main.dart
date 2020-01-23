@@ -1,9 +1,5 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_apirest/ui/inicio_screen.dart';
-import 'package:http/http.dart' as http;
 
 
 void main() => runApp(MyApp());
