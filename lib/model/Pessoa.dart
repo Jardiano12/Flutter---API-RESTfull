@@ -4,14 +4,12 @@ class Pessoa {
   final int id;
   final String primeiroNome;
   final String ultimoNome;
-  final String emailId;
   final String ativo;
 
   Pessoa({
     @required this.id,
     @required this.primeiroNome,
     @required this.ultimoNome,
-    @required this.emailId,
     @required this.ativo,
   });
 
@@ -20,7 +18,6 @@ class Pessoa {
       primeiroNome: json['primeiroNome'] as String,
       ultimoNome: json['ultimoNome'] as String,
       ativo: json['ativo'] as String,
-      emailId: json['emailId'] as String,
       id: json['id'] as int,
     );
   }

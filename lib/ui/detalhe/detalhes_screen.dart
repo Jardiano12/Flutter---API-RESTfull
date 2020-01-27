@@ -13,7 +13,7 @@ class DetalheScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.deepPurple,
       appBar: AppBar(
-        title: Text(pessoa.emailId),
+        title: Text(pessoa.primeiroNome),
         centerTitle: true,
         elevation: 0.0,
         actions: <Widget>[
@@ -30,7 +30,6 @@ class DetalheScreen extends StatelessWidget {
                         id: pessoa.id,
                         primeiroNome: pessoa.primeiroNome,
                         ultimoNome: pessoa.ultimoNome,
-                        emailId: pessoa.emailId,
                         ativo: pessoa.ativo),
                   ),
                 ),
@@ -131,13 +130,7 @@ class DetalheScreen extends StatelessWidget {
                   Divider(
                     color: Colors.deepPurple,
                   ),
-                  ListTile(
-                    leading: CircleAvatar(
-                      child: Icon(Icons.mail),
-                    ),
-                    title: Text("E-mail"),
-                    subtitle: Text(pessoa.emailId),
-                  ),
+
                   Divider(
                     color: Colors.deepPurple,
                   ),

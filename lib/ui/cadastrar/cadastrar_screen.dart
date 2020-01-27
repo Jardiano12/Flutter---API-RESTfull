@@ -27,7 +27,6 @@ class _CadastrarScreenState extends State<CadastrarScreen> {
 
   var primeiroNomeControlle = TextEditingController();
   var ultimoNomeControlle = TextEditingController();
-  var emailIdControlle = TextEditingController();
   var uid;
   final HttpService httpService = HttpService();
   String auxAtivo;
@@ -37,14 +36,12 @@ class _CadastrarScreenState extends State<CadastrarScreen> {
     super.initState();
     primeiroNomeControlle = TextEditingController(text: widget.pessoa.primeiroNome);
     ultimoNomeControlle = TextEditingController(text: widget.pessoa.ultimoNome);
-    emailIdControlle = TextEditingController(text: widget.pessoa.emailId);
     uid = widget.pessoa.id;
   }
   @override
   void dispose() {
     primeiroNomeControlle.clear();
     ultimoNomeControlle.clear();
-    emailIdControlle.clear();
     super.dispose();
   }
   @override
@@ -100,20 +97,6 @@ class _CadastrarScreenState extends State<CadastrarScreen> {
                                 }
                             ),
 
-                            appTextField(
-                                controller: emailIdControlle,
-                                sidePadding: 8.0,
-                                textHint: 'E-mail',
-                                textIcon: Icons.mail,
-                                textType: TextInputType.text,
-                                onBtnclickedValidate: (validar) {
-                                  if (validar.isEmpty) {
-                                    showSnackBar("E-mail não pode ser vazio!", Colors.red, scaffoldKey);
-                                    return "E-mail não pode ser vazio!";
-                                  }
-                                }
-                            ),
-
                             Text("Status".toUpperCase(), style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.bold),),
                             RadioButtonGroup(
                                 labels: <String>[
@@ -150,38 +133,29 @@ class _CadastrarScreenState extends State<CadastrarScreen> {
                                 httpService.postPessoas(
                                     primeiroNome: primeiroNomeControlle.text,
                                     ultimoNome: ultimoNomeControlle.text,
-                                    emailId: emailIdControlle.text,
                                     ativo: 'mAtivo');
                               } else {
-                           /*     httpService.putPessoas(
-                                    primeiroNome: primeiroNomeControlle.text,
-                                    ultimoNome: ultimoNomeControlle.text,
-                                    emailId: emailIdControlle.text,
-                                    ativo: 'mAtivo');*/
+
 
                                 Map<String, String> headers = new HashMap();
                                 headers['Accept'] = 'application/json';
                                 headers['Content-type'] = 'application/json';
-
                                 Http.Response response = await Http.post(
-                                    "http://192.168.0.103:8080/crud/api/v1/funcionario",
+                                    "http://192.168.0.102:8080/crud/api/v1/funcionario",
                                     headers: headers,
                                     body: jsonEncode({
-                                      "id": 101,
-                                      "primeiroNome": "Jardiano Conceicao Batista de ",
-                                      "ultimoNome": "Almeida",
-                                      "emailId": "Jardiano.IFRR.TCC@gmail.com",
-                                      "ativo": "false"
+                                      "id": 1,
+                                      "primeiroNome": primeiroNomeControlle.text,
+                                      "ultimoNome": ultimoNomeControlle.text,
+                                     // "email_id": "Jardiano.IFRR.TCC@gmail.com".toLowerCase(),
+                                      "ativo": auxAtivo
                                     }),
-                                    encoding: Encoding.getByName('utf-8')
-                                );
+                                    encoding: Encoding.getByName('utf-8'));
                               }
 
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => InicioScreen(),
-                                ),
-                              );
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => InicioScreen(),
+                              ));
                             }
                           },
                           child: Container(

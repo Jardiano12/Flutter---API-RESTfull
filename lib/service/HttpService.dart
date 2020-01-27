@@ -9,7 +9,7 @@ import 'package:http/http.dart' as Http;
 import '../model/Pessoa.dart';
 
 class HttpService {
-  final String postsURL = "http://192.168.0.103:8080/crud/api/v1/funcionario";
+  final String postsURL = "http://192.168.0.102:8080/crud/api/v1/funcionario";
 
   Future<List<Pessoa>> getPessoas() async {
     Response res = await get(postsURL);
